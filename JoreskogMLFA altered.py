@@ -101,16 +101,3 @@ class JoreskogMLFA(object):
         Sigma = Lambda @ Lambda.T + Phi
 
         return Phi, Lambda, F, U, Sigma
-    
-data = pd.read_excel(r"C:\Users\29731\Desktop\计量Ⅱ\王皓宇 2021201605 project\grouped_test_data\FA_gp_data14.xlsx", 
-                                    header=0, index_col=0)
-
-mlfa = JoreskogMLFA(data=data, k = 7)
-
-Phi, Lambda, F, U, Sigma = mlfa.run()
-print(Phi, '\n', Lambda, '\n', F, '\n', U)
-
-chi_2 = mlfa.n * (slogdet(Sigma)[1] - slogdet(mlfa.S)[1] + np.trace(mlfa.S @ inv(Sigma)) - mlfa.p)
-print(chi_2)
-print(chi2.cdf(chi_2, df = ((mlfa.p - mlfa.k) ** 2 -mlfa.p - mlfa.k) / 2))
-print(((mlfa.p - mlfa.k) ** 2 -mlfa.p - mlfa.k) / 2)
