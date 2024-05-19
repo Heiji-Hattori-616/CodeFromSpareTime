@@ -1,8 +1,8 @@
 /*
-ÔËĞĞ´Ë´úÂëÇ°£¬ÇëÎñ±Ø±£Ö¤ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ£¬·ñÔòÎŞ·¨×¼È·¶¨Î»Êó±êÎ»ÖÃ¡£
+è¿è¡Œæ­¤ä»£ç å‰ï¼Œè¯·åŠ¡å¿…ä¿è¯ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼Œå¦åˆ™æ— æ³•å‡†ç¡®å®šä½é¼ æ ‡ä½ç½®ã€‚
 Please make sure you run this program as an administrator, or the position of mouse may NOT be accurately located.
 
-¡ª¡ªAuthor: Haoyu Wang
+â€”â€”Author: Haoyu Wang
 */
 
 #include <stdio.h>
@@ -11,7 +11,7 @@ Please make sure you run this program as an administrator, or the position of mo
 #include <time.h>
 #include <windows.h>
 
-#define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME)&0x8000)?1:0) //°´ÏÂÄ³¼ü´«µİµÄĞÅºÅ
+#define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME)&0x8000)?1:0) //æŒ‰ä¸‹æŸé”®ä¼ é€’çš„ä¿¡å·
 
 int X0, Y0, x_click, y_click;
 int dif, judge = -1, flag = 1, bomb_num = 0;
@@ -19,48 +19,48 @@ int dif, judge = -1, flag = 1, bomb_num = 0;
 int dx[8] = {-1, -1, -1, 0, 1, 1, 1, 0}, dy[8] = {-1, 0, 1, 1, 1, 0, -1, -1};
 char ord;
 POINT p;
-HWND h = GetConsoleWindow(); // ¿ØÖÆÌ¨´°¿ÚµÄ¾ä±ú
-HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); // ±ê×¼ÊäÈë¾ä±ú
-HANDLE hOutPut = GetStdHandle(STD_OUTPUT_HANDLE); // ±ê×¼Êä³ö¾ä±ú
-CONSOLE_FONT_INFO consoleCurrentFont; // ÓÃÓÚ´æ´¢×ÖÌå´óĞ¡
+HWND h = GetConsoleWindow(); // æ§åˆ¶å°çª—å£çš„å¥æŸ„
+HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE); // æ ‡å‡†è¾“å…¥å¥æŸ„
+HANDLE hOutPut = GetStdHandle(STD_OUTPUT_HANDLE); // æ ‡å‡†è¾“å‡ºå¥æŸ„
+CONSOLE_FONT_INFO consoleCurrentFont; // ç”¨äºå­˜å‚¨å­—ä½“å¤§å°
 DWORD mode;
 
 void UserDesign() {
 	/*
-	ÓÃ»§Éè¼ÆÄÑ¶È
+	ç”¨æˆ·è®¾è®¡éš¾åº¦
 	*/
-	SetConsoleTitle(u8"É¨À×£¡");
+	SetConsoleTitle(u8"æ‰«é›·ï¼");
 
-	printf(u8"***ÔËĞĞ´Ë´úÂëÇ°£¬ÇëÎñ±Ø±£Ö¤ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ£¬·ñÔòÎŞ·¨×¼È·¶¨Î»Êó±êÎ»ÖÃ¡£***\n");
+	printf(u8"***è¿è¡Œæ­¤ä»£ç å‰ï¼Œè¯·åŠ¡å¿…ä¿è¯ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œï¼Œå¦åˆ™æ— æ³•å‡†ç¡®å®šä½é¼ æ ‡ä½ç½®ã€‚***\n");
 	printf(u8"***Please make sure you run this program as an administrator, or the position of mouse may NOT be accurately located.***\n\n\n");
 
-	printf(u8"***»¶Ó­Ê¹ÓÃÉ¨À×-v-£¡Authored by Haoyu Wang***\n");
+	printf(u8"***æ¬¢è¿ä½¿ç”¨æ‰«é›·-v-ï¼Authored by Haoyu Wang***\n");
 	system("pause");
 	system("cls");
 sign1:
-	printf(u8"ÇëÊäÈëµØÍ¼µÄĞĞÊı(·¶Î§Îª8~32)£º\n");
+	printf(u8"è¯·è¾“å…¥åœ°å›¾çš„è¡Œæ•°(èŒƒå›´ä¸º8~32)ï¼š\n");
 	scanf(u8"%d", &X0);
 	if (!(X0 >= 8 && X0 <= 32)) {
 		system("cls");
-		printf(u8"¼ì²âµ½ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë£º\n");
+		printf(u8"æ£€æµ‹åˆ°è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š\n");
 		goto sign1;
 	}
 	system("cls");
 sign2:
-	printf(u8"ÇëÊäÈëµØÍ¼µÄÁĞÊı(·¶Î§Îª8~32)£º\n");
+	printf(u8"è¯·è¾“å…¥åœ°å›¾çš„åˆ—æ•°(èŒƒå›´ä¸º8~32)ï¼š\n");
 	scanf(u8"%d", &Y0);
 	if (!(Y0 >= 8 && Y0 <= 32)) {
 		system(u8"cls");
-		printf(u8"¼ì²âµ½ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë£º\n");
+		printf(u8"æ£€æµ‹åˆ°è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š\n");
 		goto sign2;
 	}
 	system("cls");
 sign3:
-	printf(u8"ÇëÊäÈëÄúÒª½øĞĞµÄÄÑ¶È(·¶Î§Îª1~50£¬ÍÆ¼ö·¶Î§Îª3~25)£º\n");
+	printf(u8"è¯·è¾“å…¥æ‚¨è¦è¿›è¡Œçš„éš¾åº¦(èŒƒå›´ä¸º1~50ï¼Œæ¨èèŒƒå›´ä¸º3~25)ï¼š\n");
 	scanf(u8"%d", &dif);
 	if (!(dif >= 1 && dif <= 50)) {
 		system("cls");
-		printf(u8"¼ì²âµ½ÊäÈë´íÎó£¬ÇëÖØĞÂÊäÈë£º\n");
+		printf(u8"æ£€æµ‹åˆ°è¾“å…¥é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š\n");
 		goto sign3;
 	}
 	system("mode con cols=90 lines=45");
@@ -71,7 +71,7 @@ int map[35][35] = {0}, st[35][35] = {0};
 
 void FormMap() {
 	/*
-	ÓÃËæ»úÊıĞÎ³ÉµØÍ¼
+	ç”¨éšæœºæ•°å½¢æˆåœ°å›¾
 	*/
 	for (int i = 0; i < X0; i++)
 		for (int j = 0; j < Y0; j++) {
@@ -86,26 +86,26 @@ void FormMap() {
 
 void UserInput() {
 	/*
-	ÓÃ»§½øĞĞ²Ù×÷
+	ç”¨æˆ·è¿›è¡Œæ“ä½œ
 	*/
-	printf(u8"\nÍæ·¨£º\nµã»÷×ó¼üÀ´Ì½Ë÷ÇøÓò£»µã»÷ÓÒ¼üÀ´±ê¼ÇÇøÓò¡£\n");
+	printf(u8"\nç©æ³•ï¼š\nç‚¹å‡»å·¦é”®æ¥æ¢ç´¢åŒºåŸŸï¼›ç‚¹å‡»å³é”®æ¥æ ‡è®°åŒºåŸŸã€‚\n");
 	GetConsoleMode(hStdin, &mode);
 	GetCurrentConsoleFont(hOutPut, FALSE, &consoleCurrentFont);
 	mode &= ~ENABLE_QUICK_EDIT_MODE;
 	SetConsoleMode(hStdin, mode);
 	while (1) {
-		if (KEY_DOWN(VK_LBUTTON)) { // µ±°´ÏÂ×ó¼ü
+		if (KEY_DOWN(VK_LBUTTON)) { // å½“æŒ‰ä¸‹å·¦é”®
 			GetCursorPos(&p);
-			// printf(u8"×ÀÃæ£ºx=%ld, y=%ld", p.x / (2 * consoleCurrentFont.dwFontSize.X) - 1, p.y / consoleCurrentFont.dwFontSize.Y - 1);
+			// printf(u8"æ¡Œé¢ï¼šx=%ld, y=%ld", p.x / (2 * consoleCurrentFont.dwFontSize.X) - 1, p.y / consoleCurrentFont.dwFontSize.Y - 1);
 			ScreenToClient(h, &p);
-			// printf(u8"¿ØÖÆÌ¨£ºx=%ld, y=%ld", p.x / (2 * consoleCurrentFont.dwFontSize.X) - 1, p.y / consoleCurrentFont.dwFontSize.Y - 1);
+			// printf(u8"æ§åˆ¶å°ï¼šx=%ld, y=%ld", p.x / (2 * consoleCurrentFont.dwFontSize.X) - 1, p.y / consoleCurrentFont.dwFontSize.Y - 1);
 			y_click = p.x / (2 * consoleCurrentFont.dwFontSize.X) - 1;
 			x_click = p.y / consoleCurrentFont.dwFontSize.Y - 1;
 			ord = 'E';
 			if (x_click >= 0 && x_click < X0 && y_click >= 0 && y_click < Y0)
 				break;
 		}
-		if (KEY_DOWN(VK_RBUTTON)) { // µ±°´ÏÂÓÒ¼ü
+		if (KEY_DOWN(VK_RBUTTON)) { // å½“æŒ‰ä¸‹å³é”®
 			GetCursorPos(&p);
 			ScreenToClient(h, &p);
 			y_click = p.x / (2 * consoleCurrentFont.dwFontSize.X) - 1;
@@ -114,7 +114,7 @@ void UserInput() {
 			if (x_click >= 0 && x_click < X0 && y_click >= 0 && y_click < Y0)
 				break;
 		}
-		Sleep(100); //ÎªCPU¼õ¸º£¬³ÌĞòÔİÍ£100ºÁÃë
+		Sleep(100); //ä¸ºCPUå‡è´Ÿï¼Œç¨‹åºæš‚åœ100æ¯«ç§’
 	}
 	if (flag) {
 		if (st[x_click][y_click])
@@ -126,7 +126,7 @@ void UserInput() {
 
 int CheckAround(int x, int y) {
 	/*
-	¼ì²âÄ³¸öµãÖÜÎ§ÊÇ·ñÓĞµØÀ×£¬ÓÃÓÚµİ¹é
+	æ£€æµ‹æŸä¸ªç‚¹å‘¨å›´æ˜¯å¦æœ‰åœ°é›·ï¼Œç”¨äºé€’å½’
 	*/
 	int sum = 0, tx, ty;
 	for (int k = 0; k < 8; k++) {
@@ -140,7 +140,7 @@ int CheckAround(int x, int y) {
 
 void ExploreMap(int x, int y) {
 	/*
-	Èç¹ûÅÔ±ßÓĞÀ×£¬¾ÍÍ£Ö¹£»Èç¹ûÃ»ÓĞÀ×£¬¾ÍÍØÕ¹
+	å¦‚æœæ—è¾¹æœ‰é›·ï¼Œå°±åœæ­¢ï¼›å¦‚æœæ²¡æœ‰é›·ï¼Œå°±æ‹“å±•
 	*/
 	int warn = CheckAround(x, y), tx, ty;
 	if (warn != 0) {
@@ -158,7 +158,7 @@ void ExploreMap(int x, int y) {
 
 int CheckWin() {
 	/*
-	¼ì²âÓÃ»§ÊÇ·ñÊ¤Àû
+	æ£€æµ‹ç”¨æˆ·æ˜¯å¦èƒœåˆ©
 	*/
 	for (int i = 0; i < X0; i++)
 		for (int j = 0; j < Y0; j++) {
@@ -170,54 +170,54 @@ int CheckWin() {
 
 void DealWithMap() {
 	/*
-	¸ù¾İÓÃ»§µÄ²Ù×÷´¦ÀíµØÍ¼
+	æ ¹æ®ç”¨æˆ·çš„æ“ä½œå¤„ç†åœ°å›¾
 	*/
-	if (st[x_click][y_click] == 1 && ord == 'E') { //Èç¹ûÓÃ»§²Èµ½ÁËÀ×£¬ÅĞ¸º
+	if (st[x_click][y_click] == 1 && ord == 'E') { //å¦‚æœç”¨æˆ·è¸©åˆ°äº†é›·ï¼Œåˆ¤è´Ÿ
 		for (int i = 0; i < X0; i++)
 			for (int j = 0; j < Y0; j++) {
 				if (st[i][j] == 1)
 					map[i][j] = -3;
-			} //°ÑËùÓĞÀ×ÁÁ³öÀ´
-		judge = 0; //ÅĞ¸º
+			} //æŠŠæ‰€æœ‰é›·äº®å‡ºæ¥
+		judge = 0; //åˆ¤è´Ÿ
 		return;
 	}
-	if (ord == 'S') { //Èç¹ûÓÃ»§±ê¼Ç£¬¾Í°ÑÕı·½ĞÎ»»³ÉÈı½ÇĞÎ
+	if (ord == 'S') { //å¦‚æœç”¨æˆ·æ ‡è®°ï¼Œå°±æŠŠæ­£æ–¹å½¢æ¢æˆä¸‰è§’å½¢
 		if (map[x_click][y_click] == 0)
 			map[x_click][y_click] = -2;
 		return;
-	} else if (ord == 'E') //Èç¹ûÓÃ»§µã»÷£¬¾Í´Óµã»÷µÄÎ»ÖÃ½øĞĞÌ½Ë÷
+	} else if (ord == 'E') //å¦‚æœç”¨æˆ·ç‚¹å‡»ï¼Œå°±ä»ç‚¹å‡»çš„ä½ç½®è¿›è¡Œæ¢ç´¢
 		ExploreMap(x_click, y_click);
-	if (CheckWin()) { //Èç¹ûÓÃ»§Ó®ÁË£¬ÄÇËû¾ÍÓ®ÁË
+	if (CheckWin()) { //å¦‚æœç”¨æˆ·èµ¢äº†ï¼Œé‚£ä»–å°±èµ¢äº†
 		judge = 1;
 		for (int i = 0; i < X0; i++)
 			for (int j = 0; j < Y0; j++) {
 				if (map[i][j] == 0)
 					map[i][j] = -2;
-			} //°ÑËùÓĞÀ×ÒÔ±ê¼ÇĞÎÊ½ÁÁ³öÀ´
+			} //æŠŠæ‰€æœ‰é›·ä»¥æ ‡è®°å½¢å¼äº®å‡ºæ¥
 	}
 }
 
 void PrintMap() {
 	/*
-	Êä³öµØÍ¼
+	è¾“å‡ºåœ°å›¾
 	*/
 	int i, j;
 	printf("  ");
 	for (j = 0; j < Y0; j++)
 		printf(u8"%2d", j + 1);
-	printf(u8" ÁĞ\n");
+	printf(u8" åˆ—\n");
 	for (i = 0; i < X0; i++) {
 		printf(u8"%2d", i + 1);
-		for (j = 0; j < Y0; j++)//µØÍ¼ÉÏµÄ²»Í¬¸ñµã¶ÔÓ¦²»Í¬ĞÎ×´
+		for (j = 0; j < Y0; j++)//åœ°å›¾ä¸Šçš„ä¸åŒæ ¼ç‚¹å¯¹åº”ä¸åŒå½¢çŠ¶
 			switch(map[i][j]){
 				case 0: 
-					printf(u8"¡ö");
+					printf(u8"â– ");
 					break;
 				case -1: 
 					printf(u8"  ");
 					break;
 				case -2: 
-					printf(u8"¡ø");
+					printf(u8"â–²");
 					break;
 				case -3: 
 					printf(u8" X");
@@ -227,21 +227,21 @@ void PrintMap() {
 			}
 		printf("\n");
 	}
-	printf(u8"ĞĞ\n");
+	printf(u8"è¡Œ\n");
 	if (flag == 0)
-		printf(u8"µØÀ××ÜÊı£º%d\n", bomb_num);
+		printf(u8"åœ°é›·æ€»æ•°ï¼š%d\n", bomb_num);
 }
 
 void ClearMap() {
 	/*
-	Çå³ıÆÁÄ»ÉÏËùÓĞÊä³ö
+	æ¸…é™¤å±å¹•ä¸Šæ‰€æœ‰è¾“å‡º
 	*/
 	system("cls");
 }
 
 int main() {
 	/*
-	Ö÷º¯Êı
+	ä¸»å‡½æ•°
 	*/
 	// printf("h=%ld\n", h);
 	srand(time(0));
@@ -256,12 +256,12 @@ int main() {
 		ClearMap();
 		PrintMap();
 		if (judge == 1) {
-			printf(u8"***¹§Ï²Äú£¬ÄúÓ®ÁË£¡***");
+			printf(u8"***æ­å–œæ‚¨ï¼Œæ‚¨èµ¢äº†ï¼***");
 			system("color 0A");
 			system("pause");
 			break;
 		} else if (judge == 0) {
-			printf(u8"***ºÜÒÅº¶£¬ÄúÊäÁË£¡***");
+			printf(u8"***å¾ˆé—æ†¾ï¼Œæ‚¨è¾“äº†ï¼***");
 			system("color 0C");
 			system("pause");
 			break;
