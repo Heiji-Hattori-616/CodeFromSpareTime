@@ -25,6 +25,25 @@ HANDLE hOutPut = GetStdHandle(STD_OUTPUT_HANDLE); // 标准输出句柄
 CONSOLE_FONT_INFO consoleCurrentFont; // 用于存储字体大小
 DWORD mode;
 
+VOID ManagerRun(LPCSTR exe,LPCSTR param,INT nShow=SW_SHOW){
+	/*
+	获取管理员权限，本段代码块借鉴自 https://blog.csdn.net/cjz2005/article/details/104513305
+	*/
+	SHELLEXECUTEINFO ShExecInfo; 
+	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);  
+	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS ;  
+	ShExecInfo.hwnd = NULL;  
+	ShExecInfo.lpVerb = "runas";  
+	ShExecInfo.lpFile = exe; 
+	ShExecInfo.lpParameters = param;   
+	ShExecInfo.lpDirectory = NULL;  
+	ShExecInfo.nShow = nShow;  
+	ShExecInfo.hInstApp = NULL;   
+	ShellExecuteEx(&ShExecInfo);  
+	CloseHandle(ShExecInfo.hProcess);
+	return;
+}
+
 void UserDesign() {
 	/*
 	用户设计难度
@@ -37,6 +56,8 @@ void UserDesign() {
 	printf(u8"***欢迎使用扫雷-v-！Authored by Haoyu Wang***\n");
 	system("pause");
 	system("cls");
+
+
 sign1:
 	printf(u8"请输入地图的行数(范围为8~32)：\n");
 	scanf(u8"%d", &X0);
@@ -46,6 +67,8 @@ sign1:
 		goto sign1;
 	}
 	system("cls");
+
+
 sign2:
 	printf(u8"请输入地图的列数(范围为8~32)：\n");
 	scanf(u8"%d", &Y0);
@@ -55,6 +78,8 @@ sign2:
 		goto sign2;
 	}
 	system("cls");
+
+
 sign3:
 	printf(u8"请输入您要进行的难度(范围为1~50，推荐范围为3~25)：\n");
 	scanf(u8"%d", &dif);
@@ -206,9 +231,9 @@ void PrintMap() {
 	for (j = 0; j < Y0; j++)
 		printf(u8"%2d", j + 1);
 	printf(u8" 列\n");
-	for (i = 0; i < X0; i++) {
+	for (i = 0; i < X0; ++i) {
 		printf(u8"%2d", i + 1);
-		for (j = 0; j < Y0; j++)//地图上的不同格点对应不同形状
+		for (j = 0; j < Y0; ++j)//地图上的不同格点对应不同形状
 			switch(map[i][j]){
 				case 0: 
 					printf(u8"■");
@@ -239,34 +264,40 @@ void ClearMap() {
 	system("cls");
 }
 
-int main() {
+int main(int argc,char *argv[]) {
 	/*
 	主函数
 	*/
-	// printf("h=%ld\n", h);
+
 	srand(time(0));
 
-	UserDesign();
-	FormMap();
-	PrintMap();
-
-	while (1) {
-		UserInput();
-		DealWithMap();
-		ClearMap();
+	if(argc == 1){
+		ShowWindow(GetConsoleWindow(),SW_HIDE);
+		ManagerRun(argv[0],"2");
+		return 1;
+	}
+	else if(argc == 2){
+		UserDesign();
+		FormMap();
 		PrintMap();
-		if (judge == 1) {
-			printf(u8"***恭喜您，您赢了！***");
-			system("color 0A");
-			system("pause");
-			break;
-		} else if (judge == 0) {
-			printf(u8"***很遗憾，您输了！***");
-			system("color 0C");
-			system("pause");
-			break;
+
+		while (1) {
+			UserInput();
+			DealWithMap();
+			ClearMap();
+			PrintMap();
+			if (judge == 1) {
+				printf(u8"***恭喜您，您赢了！***");
+				system("color 0A");
+				system("pause");
+				break;
+			} else if (judge == 0) {
+				printf(u8"***很遗憾，您输了！***");
+				system("color 0C");
+				system("pause");
+				break;
+			}
 		}
 	}
-	
 	return 0;
 }
