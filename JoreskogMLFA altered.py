@@ -7,25 +7,42 @@ np.random.seed(20240220)
 np.set_printoptions(suppress=True, precision=3)
 
 def LargestK(A: np.array, k: int):
+    """
+    Get the largest k eigenvalues of a square matrix A.
+    Return the largest k eigenvalues and their eigenvectors.
+    """
     eigvals, eigvcts = np.linalg.eig(A)
     idx = np.sort(np.argpartition(np.array(eigvals), -k)[-k:])
     return eigvals[idx], eigvcts[:, idx]
 
 def ExceptLargestK(A: np.array, k: int):
+    """
+    Extract all eigenvalues of a square matrix A except for the largest k ones.
+    Return those eigenvalues and their eigenvectors.
+    """
     eigvals, eigvcts = np.linalg.eig(A)
     idx = np.sort(np.argpartition(np.array(eigvals), -k)[:-k])
     return eigvals[idx], eigvcts[:, idx]
 
 class JoreskogMLFA(object):
     def __init__(self, data: pd.DataFrame, k: int, tol = 1e-8):
-        self.data = data.T
-        self.k = k
-        self.p = len(self.data.index)
-        self.n = len(self.data.columns)
-        self.S = self.data.T.corr().values
-        self.epi = tol
+        """
+        initial function:
+        data: the dataset of factor analysis. Rows for different observations and columns for different features.
+        k: number of the final factors
+        tol: tolerance
+        """
+        self.data = data.T # the transposition of the dataset matrix
+        self.k = k # number of the factors
+        self.p = len(self.data.index) # number of the features
+        self.n = len(self.data.columns) # number of observations
+        self.S = self.data.T.corr().values # the dispersion matrix of the p features
+        self.epi = tol # tolerance
 
     def Grad(self, x: np.array):
+        """
+        Calculate the gradient of the likelihood function by equation (25) of Joreskog(1967).
+        """
         x_ls = (x.T)[0]
         Theta, Omega = LargestK(np.diag(x_ls**(-0.5)) @ self.S @ np.diag(x_ls**(-0.5)), self.k)
         # print(Omega.T @ Omega)
@@ -39,6 +56,9 @@ class JoreskogMLFA(object):
         return np.array([g_ls]).T
 
     def Epoach(self, x: np.array, g: np.array, E: np.array):
+        """
+        An epoach to maximize the likelihood function.
+        """
         d = - E @ g
 
         alpha = 0
@@ -69,6 +89,16 @@ class JoreskogMLFA(object):
         return new_x, new_g, new_E, False
 
     def run(self):
+        """
+        Do the process of iteration.
+        The returns are [Phi, Lambda, F, U, Sigma].
+        
+        Phi: the estimated variance-covariance matrix of the uniquenesses. A (p*p) array.
+        Lambda: the factor loading matrix. A (p*k) array.
+        F: the factor values estimated by WLS. A (k*1) array.
+        U: the estimated uniquenesses (residuals). A (p*1) array.
+        Sigma: the estimated variance-covariance matrix of the p features. A (p*p) array.
+        """
         S_inv = inv(self.S)
         Phi_ls = np.array([max((1 - self.k / (2*self.p)) / S_inv[i, i], self.epi) for i in range(self.p)])
         _, Omega = LargestK(np.diag(Phi_ls**(-0.5)) @ self.S @ np.diag(Phi_ls**(-0.5)), self.k)
